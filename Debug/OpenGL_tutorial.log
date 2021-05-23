@@ -1,0 +1,4 @@
+﻿  main.cpp
+main.obj : error LNK2019: unresolved external symbol _glfwInit referenced in function _main
+C:\Users\mario\Documents\Programming\vendor\glfw-3.3.4.bin.WIN64\lib-vc2019\glfw3.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\mario\Documents\Programming\OpenGL_tutorial\Debug\OpenGL_tutorial.exe : fatal error LNK1120: 1 unresolved externals
