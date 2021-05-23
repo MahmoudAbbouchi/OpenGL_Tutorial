@@ -1,0 +1,2 @@
+C:\Users\mario\Documents\Programming\OpenGL_tutorial\x64\Debug\OpenGL_tutorial.exe
+C:\Users\mario\Documents\Programming\OpenGL_tutorial\x64\Debug\OpenGL_tutorial.pdb
