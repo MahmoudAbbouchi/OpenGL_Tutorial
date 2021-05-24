@@ -12,14 +12,21 @@ void resize_win(GLFWwindow* win, int height, int width);
 
 int main() {
 	// Initialization of OpenGL and Window and variables
-	float obj1_vertices[] = {0.4f, 0.2f, 0.0f,
+	float obj1_vertices[] = { 0.4f, 0.2f, 0.0f,
 							 0.3f, -0.2f, 0.0f,
-							 0.1f, 0.7f, 0.0f};
-	unsigned int obj1_indices[] = {0, 1, 2};
+							 0.1f, 0.7f, 0.0f };
+	unsigned int obj1_indices[] = { 0, 1, 2 };
+	float obj2_vertices[] = { 0.4f, 0.2f, 0.0f,
+							  0.3f, -0.2f, 0.0f,
+							  0.1f, 0.7f, 0.0f,
+							  -0.8f, 0.3f, 0.0f };
+	unsigned int obj2_indices[] = { 0, 1, 2, 1, 3, 2 };
+
 	// Using a c string instead
+	// Temporary, will be moved into a class
 	const char * vrtx_string_src = "#version 460 core\nlayout(location = 0) in vec3 apos;\nvoid main() {\ngl_Position = vec4(apos, 1.0);\n}";
 	const char * frag_string_src = "#version 460 core\nout vec4 frag_colour;\nvoid main() {\nfrag_colour = vec4(0.3, 0.8, 0.01, 1.0);\n}";
-	
+
 	std::string name = "Mahmoud";
 	std::cout << "Hello world, + " << PI << std::endl;
 	std::cin >> name;
@@ -60,12 +67,19 @@ int main() {
 	// Binding the vertex buffer GL_ARRAY_BUFFER to my vertex
 	glBindBuffer(GL_ARRAY_BUFFER, vrtx_buf_obj);
 	// Feeds my vertex to the GL_ARRAY_BUFFER slot
-	glBufferData(GL_ARRAY_BUFFER, sizeof(obj1_vertices), obj1_vertices,	GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(obj2_vertices), obj2_vertices,	GL_STATIC_DRAW);
+
 
 	// Setting up vertex attributes
 	// This allows us to define how the vertices should be interpreted
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	// Setting index buffer
+	unsigned int idx_buf_obj;
+	glGenBuffers(1, &idx_buf_obj);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idx_buf_obj);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(obj2_indices), obj2_indices, GL_STATIC_DRAW);
 
 	// Creating the vertex shader
 	unsigned int vrtx_shader_obj = glCreateShader(GL_VERTEX_SHADER);
@@ -87,11 +101,20 @@ int main() {
 	glDeleteShader(vrtx_shader_obj);
 	glDeleteShader(frag_shader_obj);
 
-	while(!glfwWindowShouldClose(window1)){
+	while (!glfwWindowShouldClose(window1)) {
+
+		if (glfwGetKey(window1, GLFW_KEY_L) == GLFW_PRESS) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //Line mode drawing
+		}
+		else if (glfwGetKey(window1, GLFW_KEY_F) == GLFW_PRESS) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //Fill mode drawing
+		}
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader_prog);
 		glBindVertexArray(vrtx_arr_obj);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawArrays(GL_TRIANGLES, 0, 3); // Draw an element without the indices buffer
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window1);
 		glfwPollEvents();
 	}
